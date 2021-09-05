@@ -1,0 +1,29 @@
+<h1>Listenin' Post 🧑‍🌾</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal DailyTwangWeb.PostLive.FormComponent,
+    title: @page_title,
+    action: @live_action,
+    post: @post,
+    return_to: Routes.post_index_path(@socket, :index) %>
+<% end %>
+
+
+<div class='flex-1' id='posts'>
+  <%= for post <- @posts do %>
+    <div class='w-full border-t-2' id="post-<%= post.id%>" 
+      x-data="{open: false}">
+
+      <a href='<%=post.link%>' target="_blank" @click="open = ! open">
+        <%= post.title %> by: <%= post.author %>, FROM: <%= post.source %>
+        </a>
+        <!--<div x-transition x-show="open">Test</div>-->
+    </div>
+  <% end %>
+</div>
+
+
+<%#<span><%= live_redirect "Show", to: Routes.post_show_path(@socket, :show, post) %></span> 
+<%#<span><%= live_patch "Edit", to: Routes.post_index_path(@socket, :edit, post) %></span> 
+<%# <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: post.id, data: [confirm: "Are you sure?"] %></span> 
+<%# <span><%= live_patch "New Post", to: Routes.post_index_path(@socket, :new) %></span> 

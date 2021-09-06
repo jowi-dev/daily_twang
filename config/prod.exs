@@ -18,11 +18,12 @@ config :logger, level: :info
 # to the previous section and set your `:url` port to 443:
 #
 config(:daily_twang, DailyTwangWeb.Endpoint, ...,
-  url: [host: "dailytwang.com", port: 443],
+  url: [host: "${APP_NAME}.gigalixir.com", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json",
+  secret_key_base: "${SECRET_KEY_BASE}",
   https: [
     ...,
-    port: 443,
+    port: {:system, "PORT"},
     cipher_suite: :strong,
     keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
     certfile: System.get_env("SOME_APP_SSL_CERT_PATH"),

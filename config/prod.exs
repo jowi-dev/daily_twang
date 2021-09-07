@@ -23,6 +23,7 @@ config :daily_twang, DailyTwangWeb.Endpoint,
   secret_key_base: "${SECRET_KEY_BASE}",
   # Needed for Phoenix 1.2 and 1.4. Doesn't hurt for 1.3.
   http: [port: {:system, "PORT"}],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   # Needed for Phoenix 1.3. Doesn't hurt for other versions
   load_from_system_env: true,
   # Without this line, your app will not start the web server!

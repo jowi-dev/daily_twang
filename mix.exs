@@ -52,7 +52,8 @@ defmodule DailyTwang.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:feeder_ex, "~> 1.1"},
       {:distillery, "~> 2.1"},
-      {:httpoison, "~> 1.8"}
+      {:httpoison, "~> 1.8"},
+      {:timex, "~> 3.7"}
     ]
   end
 

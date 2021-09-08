@@ -8,12 +8,14 @@ defmodule DailyTwang.Posts do
 
   alias DailyTwang.Posts.Post
   alias FeederEx
+  alias Timex
   alias HTTPoison
 
   @feeds [
     "https://cointelegraph.com/rss",
     "https://hnrss.org/frontpage",
-    "http://america.aljazeera.com/content/ajam/articles.rss"
+    "http://america.aljazeera.com/content/ajam/articles.rss",
+    "https://elixirstatus.com/rss"
   ]
 
   @doc """
@@ -29,7 +31,15 @@ defmodule DailyTwang.Posts do
     @feeds
     |> Enum.map(&parse_feed(&1))
     |> List.flatten()
-    |> Enum.shuffle()
+
+    # |> Enum.sort(&compare_dates/2)
+  end
+
+  defp compare_dates(date1, date2) do
+    date1 = Timex.parse(date1.updated)
+    date2 = Timex.parse(date2.updated)
+
+    DateTime.compare(date1, date2)
   end
 
   # Gets the given content from a URL and parses it in readable format
@@ -40,6 +50,7 @@ defmodule DailyTwang.Posts do
       HTTPoison.get!(url)
       |> Map.get(:body)
       |> FeederEx.parse()
+      |> IO.inspect(pretty: true)
 
     Enum.map(results.entries, &Map.put(&1, :source, source_name))
   end

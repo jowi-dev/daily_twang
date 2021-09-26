@@ -53,6 +53,7 @@ defmodule DailyTwang.MixProject do
       {:feeder_ex, "~> 1.1"},
       {:distillery, "~> 2.1"},
       {:httpoison, "~> 1.8"},
+      {:crawly, "~> 0.13.0"},
       {:timex, "~> 3.7"}
     ]
   end

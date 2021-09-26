@@ -27,9 +27,11 @@ defmodule DailyTwangWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", DailyTwangWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", DailyTwangWeb do
+    pipe_through :api
+
+    resources "/posts", PostController, except: [:new, :edit]
+  end
 
   # Enables LiveDashboard only for development
   #

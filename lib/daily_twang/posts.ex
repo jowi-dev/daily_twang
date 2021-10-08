@@ -14,9 +14,11 @@ defmodule DailyTwang.Posts do
   @feeds [
     "https://cointelegraph.com/rss",
     "https://hnrss.org/frontpage",
-    "http://america.aljazeera.com/content/ajam/articles.rss",
-    "https://elixirstatus.com/rss"
+    "https://elixirstatus.com/rss",
+    "https://www.aljazeera.com/xml/rss/all.xml"
   ]
+
+  # 
 
   @doc """
   Returns the list of posts.
@@ -31,15 +33,13 @@ defmodule DailyTwang.Posts do
     @feeds
     |> Enum.map(&parse_feed(&1))
     |> List.flatten()
-
-    # |> Enum.sort(&compare_dates/2)
+    |> Enum.sort(&compare_dates/2)
   end
 
-  defp compare_dates(date1, date2) do
-    date1 = Timex.parse(date1.updated)
-    date2 = Timex.parse(date2.updated)
+  @date_format "%a, %d %b %Y %T %z"
 
-    DateTime.compare(date1, date2)
+  defp compare_dates(%{updated: date1}, %{updated: date2}) do
+    0 >= Timex.compare(date1, date2)
   end
 
   # Gets the given content from a URL and parses it in readable format
@@ -50,9 +50,18 @@ defmodule DailyTwang.Posts do
       HTTPoison.get!(url)
       |> Map.get(:body)
       |> FeederEx.parse()
-      |> IO.inspect(pretty: true)
 
-    Enum.map(results.entries, &Map.put(&1, :source, source_name))
+    Enum.map(results.entries, fn entry ->
+      date =
+        entry
+        |> Map.get(:updated)
+        |> Timex.parse(@date_format)
+
+      entry
+      |> Map.put(:source, source_name)
+      |> Map.put(:uploaded_at, Timex.format(date, "{YYYY}/{MM}/{DD}"))
+      |> Map.put(:updated, date)
+    end)
   end
 
   defp get_source_name(url) do
@@ -62,6 +71,10 @@ defmodule DailyTwang.Posts do
     end
     |> List.last()
     |> String.split(".")
+    |> case do
+      ["www" | tail] -> tail
+      result -> result
+    end
     |> List.first()
     |> String.downcase()
     |> String.to_atom()

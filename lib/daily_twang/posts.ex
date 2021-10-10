@@ -39,7 +39,7 @@ defmodule DailyTwang.Posts do
   @date_format "%a, %d %b %Y %T %z"
 
   defp compare_dates(%{updated: date1}, %{updated: date2}) do
-    0 >= Timex.compare(date1, date2)
+    0 >= Timex.compare(date2, date1)
   end
 
   # Gets the given content from a URL and parses it in readable format
@@ -52,16 +52,43 @@ defmodule DailyTwang.Posts do
       |> FeederEx.parse()
 
     Enum.map(results.entries, fn entry ->
+      string_date = Map.get(entry, :updated)
+
       date =
-        entry
-        |> Map.get(:updated)
-        |> Timex.parse(@date_format)
+        cond do
+          matches_format?(string_date, "%a, %d %b %Y %T %z") ->
+            parse_format(string_date, "%a, %d %b %Y %T %z")
+
+          matches_format?(string_date, "%d %b %Y %T %z") ->
+            parse_format(string_date, "%d %b %Y %T %z")
+
+          true ->
+            # This is bad fix it
+            parse_format("0" <> string_date, "%d %b %Y %T %z")
+        end
+
+      {:ok, format} = Timex.format(date, "{YYYY}-{0M}-{0D}")
 
       entry
       |> Map.put(:source, source_name)
-      |> Map.put(:uploaded_at, Timex.format(date, "{YYYY}/{MM}/{DD}"))
+      |> Map.put(:uploaded_at, format)
       |> Map.put(:updated, date)
     end)
+  end
+
+  defp matches_format?(date, format) do
+    case Timex.parse(date, format, :strftime) do
+      {:ok, _} -> true
+      {:error, _} -> false
+    end
+  end
+
+  defp parse_format(date, format) do
+    {:ok, parsed} =
+      date
+      |> Timex.parse(format, :strftime)
+
+    parsed
   end
 
   defp get_source_name(url) do

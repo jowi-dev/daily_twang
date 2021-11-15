@@ -20,7 +20,8 @@ defmodule DailyTwangWeb.Endpoint do
     at: "/",
     from: :daily_twang,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only:
+      ~w(assets fonts images static favicon.ico robots.txt cache_manifest.json manifest.json service-worker.js)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

@@ -30,7 +30,10 @@ defmodule DailyTwangWeb.AccountConfirmationControllerTest do
       assert Repo.get_by!(Accounts.AccountToken, account_id: account.id).context == "confirm"
     end
 
-    test "does not send confirmation token if Account is confirmed", %{conn: conn, account: account} do
+    test "does not send confirmation token if Account is confirmed", %{
+      conn: conn,
+      account: account
+    } do
       Repo.update!(Accounts.Account.confirm_changeset(account))
 
       conn =

@@ -32,6 +32,8 @@ import Alpine from "alpinejs"
 window.Alpine = Alpine;
 Alpine.start();
 
+let hooks = hooks ? hooks : {}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },

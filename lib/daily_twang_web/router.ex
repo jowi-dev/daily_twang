@@ -3,6 +3,12 @@ defmodule DailyTwangWeb.Router do
 
   import DailyTwangWeb.AccountAuth
 
+  def default_pwa_assigns(conn, _opts) do
+    conn
+    |> assign(:meta_attrs, [])
+    |> assign(:manifest, nil)
+  end
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -11,6 +17,10 @@ defmodule DailyTwangWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_account
+  end
+
+  pipeline :pwa do
+    plug :default_pwa_assigns
   end
 
   pipeline :api do
@@ -24,6 +34,12 @@ defmodule DailyTwangWeb.Router do
 
     live "/posts", PostLive.Index, :index
     # live "/posts/:id", PostLive.Index, :show
+  end
+
+  scope "/pwa", DailyTwangWeb.Pwa, as: :pwa do
+    pipe_through :browser
+    pipe_through :pwa
+    resources "/posts", PostController, only: [:index]
   end
 
   # Other scopes may use custom stacks.

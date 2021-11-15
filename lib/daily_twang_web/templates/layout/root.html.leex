@@ -8,6 +8,14 @@
     <%= live_title_tag assigns[:page_title] || "DailyTwang", suffix: " · Daily Twang" %>
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/assets/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/assets/app.js") %>"></script>
+    <%= if @meta_attrs, do: meta_tags(@meta_attrs) %>
+    <%= if @manifest do %>
+
+      <link rel="manifest"
+            href="<%= Routes.static_path(@conn, "/manifest.json") %>">
+            <!--<link rel="manifest" href="<%= @manifest %>">-->
+    <% end %>
+</head>
   </head>
   <body>
     <header>

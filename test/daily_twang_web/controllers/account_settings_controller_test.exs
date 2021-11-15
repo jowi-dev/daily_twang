@@ -95,13 +95,22 @@ defmodule DailyTwangWeb.AccountSettingsControllerTest do
 
       token =
         extract_account_token(fn url ->
-          Accounts.deliver_update_email_instructions(%{account | email: email}, account.email, url)
+          Accounts.deliver_update_email_instructions(
+            %{account | email: email},
+            account.email,
+            url
+          )
         end)
 
       %{token: token, email: email}
     end
 
-    test "updates the account email once", %{conn: conn, account: account, token: token, email: email} do
+    test "updates the account email once", %{
+      conn: conn,
+      account: account,
+      token: token,
+      email: email
+    } do
       conn = get(conn, Routes.account_settings_path(conn, :confirm_email, token))
       assert redirected_to(conn) == Routes.account_settings_path(conn, :edit)
       assert get_flash(conn, :info) =~ "Email changed successfully"

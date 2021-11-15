@@ -1,0 +1,17 @@
+{
+    "name":"Daily Twang",
+    "short_name":"Twang",
+    "start_url":"/pwa/posts",
+    "display":"standalone",
+    "background_color":"#5900b3",
+    "theme_color":"black",
+    "scope": "/pwa/posts",
+    "description":"For (crypto) miners and (internet point) farmers like you and me.",
+    "icons":[
+    {
+    "src":"images/cat-banjo-icon.png",                     
+    "sizes":"256x256",
+    "type":"image/png"
+    }
+  ]
+}

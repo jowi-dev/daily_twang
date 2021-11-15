@@ -3,7 +3,6 @@ defmodule DailyTwang.Repo.Migrations.CreatePosts do
 
   def change do
     create table(:posts) do
-
       timestamps()
     end
   end

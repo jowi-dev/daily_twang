@@ -13,7 +13,11 @@ defmodule DailyTwangWeb.AccountRegistrationControllerTest do
     end
 
     test "redirects if already logged in", %{conn: conn} do
-      conn = conn |> log_in_account(account_fixture()) |> get(Routes.account_registration_path(conn, :new))
+      conn =
+        conn
+        |> log_in_account(account_fixture())
+        |> get(Routes.account_registration_path(conn, :new))
+
       assert redirected_to(conn) == "/"
     end
   end

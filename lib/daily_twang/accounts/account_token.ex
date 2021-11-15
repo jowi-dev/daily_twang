@@ -42,7 +42,9 @@ defmodule DailyTwang.Accounts.AccountToken do
   """
   def build_session_token(account) do
     token = :crypto.strong_rand_bytes(@rand_size)
-    {token, %DailyTwang.Accounts.AccountToken{token: token, context: "session", account_id: account.id}}
+
+    {token,
+     %DailyTwang.Accounts.AccountToken{token: token, context: "session", account_id: account.id}}
   end
 
   @doc """
@@ -173,6 +175,7 @@ defmodule DailyTwang.Accounts.AccountToken do
   end
 
   def account_and_contexts_query(account, [_ | _] = contexts) do
-    from t in DailyTwang.Accounts.AccountToken, where: t.account_id == ^account.id and t.context in ^contexts
+    from t in DailyTwang.Accounts.AccountToken,
+      where: t.account_id == ^account.id and t.context in ^contexts
   end
 end

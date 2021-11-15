@@ -10,9 +10,7 @@ defmodule DailyTwang.PostsFixtures do
   def post_fixture(attrs \\ %{}) do
     {:ok, post} =
       attrs
-      |> Enum.into(%{
-
-      })
+      |> Enum.into(%{})
       |> DailyTwang.Posts.create_post()
 
     post

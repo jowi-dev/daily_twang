@@ -3,7 +3,6 @@ defmodule DailyTwang.Posts.Post do
   import Ecto.Changeset
 
   schema "posts" do
-
     timestamps()
   end
 

@@ -1,0 +1,22 @@
+<h1>Listenin' Post 🧑‍🌾</h1>
+
+
+<div class='flex-1' id='posts'>
+  <%= for post <- @posts do %>
+    <div class='w-full border-t-2' id="post-<%= post.id%>" 
+      x-data="{open: false}">
+
+      <a href='<%=post.link%>' target="_blank" @click="open = ! open">
+        <%= post.uploaded_at %> <%= post.title %> FROM: <%= post.source %>
+        </a>
+    </div>
+  <% end %>
+</div>
+
+
+<script>
+  if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+     .then(function() { console.log("Service Worker Registered"); });
+  }
+</script>

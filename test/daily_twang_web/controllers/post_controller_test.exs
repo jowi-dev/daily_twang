@@ -5,12 +5,8 @@ defmodule DailyTwangWeb.PostControllerTest do
 
   alias DailyTwang.Posts.Post
 
-  @create_attrs %{
-
-  }
-  @update_attrs %{
-
-  }
+  @create_attrs %{}
+  @update_attrs %{}
   @invalid_attrs %{}
 
   setup %{conn: conn} do

@@ -165,10 +165,15 @@ defmodule DailyTwang.Accounts do
   """
   def deliver_update_email_instructions(%Account{} = account, current_email, update_email_url_fun)
       when is_function(update_email_url_fun, 1) do
-    {encoded_token, account_token} = AccountToken.build_email_token(account, "change:#{current_email}")
+    {encoded_token, account_token} =
+      AccountToken.build_email_token(account, "change:#{current_email}")
 
     Repo.insert!(account_token)
-    AccountNotifier.deliver_update_email_instructions(account, update_email_url_fun.(encoded_token))
+
+    AccountNotifier.deliver_update_email_instructions(
+      account,
+      update_email_url_fun.(encoded_token)
+    )
   end
 
   @doc """
@@ -260,7 +265,11 @@ defmodule DailyTwang.Accounts do
     else
       {encoded_token, account_token} = AccountToken.build_email_token(account, "confirm")
       Repo.insert!(account_token)
-      AccountNotifier.deliver_confirmation_instructions(account, confirmation_url_fun.(encoded_token))
+
+      AccountNotifier.deliver_confirmation_instructions(
+        account,
+        confirmation_url_fun.(encoded_token)
+      )
     end
   end
 
@@ -283,7 +292,10 @@ defmodule DailyTwang.Accounts do
   defp confirm_account_multi(account) do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:account, Account.confirm_changeset(account))
-    |> Ecto.Multi.delete_all(:tokens, AccountToken.account_and_contexts_query(account, ["confirm"]))
+    |> Ecto.Multi.delete_all(
+      :tokens,
+      AccountToken.account_and_contexts_query(account, ["confirm"])
+    )
   end
 
   ## Reset password
@@ -301,7 +313,11 @@ defmodule DailyTwang.Accounts do
       when is_function(reset_password_url_fun, 1) do
     {encoded_token, account_token} = AccountToken.build_email_token(account, "reset_password")
     Repo.insert!(account_token)
-    AccountNotifier.deliver_reset_password_instructions(account, reset_password_url_fun.(encoded_token))
+
+    AccountNotifier.deliver_reset_password_instructions(
+      account,
+      reset_password_url_fun.(encoded_token)
+    )
   end
 
   @doc """

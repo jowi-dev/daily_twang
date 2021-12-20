@@ -17,9 +17,6 @@ defmodule DailyTwangWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_account
-  end
-
-  pipeline :pwa do
     plug :default_pwa_assigns
   end
 
@@ -38,7 +35,6 @@ defmodule DailyTwangWeb.Router do
 
   scope "/pwa", DailyTwangWeb.Pwa, as: :pwa do
     pipe_through :browser
-    pipe_through :pwa
     resources "/posts", PostController, only: [:index]
   end
 

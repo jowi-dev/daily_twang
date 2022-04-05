@@ -3,9 +3,6 @@ defmodule DailyTwang.Posts do
   The Posts context.
   """
 
-  import Ecto.Query, warn: false
-  alias DailyTwang.Repo
-
   alias DailyTwang.Posts.Post
   alias FeederEx
   alias Timex
@@ -30,11 +27,24 @@ defmodule DailyTwang.Posts do
 
   """
   def list_posts do
+    case Cachex.get(:chatter, "messages") do
+      {:ok, nil} ->
+        Cachex.put(:chatter, "messages", get_fresh_list(), ttl: :timer.hours(12))
+
+      {:ok, list} ->
+        list
+    end
+  end
+
+  defp get_fresh_list() do
     @feeds
     |> Enum.map(&fetch_results/1)
     |> List.flatten()
     |> Enum.map(&parse_feed/1)
     |> Enum.sort(&compare_dates/2)
+  end
+
+  defp get_cached_messages do
   end
 
   defp fetch_results(url) do
@@ -49,16 +59,23 @@ defmodule DailyTwang.Posts do
   end
 
   # Gets the given content from a URL and parses it in readable format
-  defp parse_feed(entry) do
+  defp parse_feed(entry) when is_map(entry) do
     string_date = Map.get(entry, :updated)
 
     date = parse_date(string_date)
     {:ok, format} = Timex.format(date, "{YYYY}-{0M}-{0D}")
 
-    entry
-    |> Map.put(:uploaded_at, format)
-    |> Map.put(:updated, date)
+    %Post{
+      link: Map.get(entry, :link),
+      source: Map.get(entry, :source),
+      title: Map.get(entry, :title),
+      uploaded_at: format,
+      updated: date,
+      id: UUID.uuid1()
+    }
   end
+
+  defp parse_feed(entry), do: IO.inspect(entry, label: "entry", pretty: true)
 
   defp parse_date(date) do
     cond do
@@ -105,5 +122,9 @@ defmodule DailyTwang.Posts do
     |> List.first()
     |> String.downcase()
     |> String.to_atom()
+  end
+
+  def change_post(post) do
+    Post.changeset(post, %{})
   end
 end

@@ -54,6 +54,8 @@ defmodule DailyTwang.MixProject do
       {:distillery, "~> 2.1"},
       {:httpoison, "~> 1.8"},
       {:crawly, "~> 0.13.0"},
+      {:uuid, "~> 1.1"},
+      {:cachex, "~> 3.4"},
       {:timex, "~> 3.7"}
     ]
   end

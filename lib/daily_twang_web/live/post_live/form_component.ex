@@ -27,6 +27,42 @@ defmodule DailyTwangWeb.PostLive.FormComponent do
     save_post(socket, socket.assigns.action, post_params)
   end
 
+  def handle_event("save", thing, socket) do
+    IO.inspect(thing, pretty: true)
+    date = Timex.now()
+    {:ok, format} = Timex.format(date, "{YYYY}-{0M}-{0D}")
+
+    message = %DailyTwang.Posts.Post{
+      id: UUID.uuid1(),
+      title: "NEW MESSAGE",
+      source: "Anonymous",
+      link: "/",
+      updated: date,
+      uploaded_at: format
+    }
+
+    case Cachex.get(:chatter, "messages") do
+      {:ok, nil} ->
+        IO.puts("MADE IT")
+        Cachex.put(:chatter, "messages", [message])
+
+      {:ok, val} ->
+        IO.inspect(val, pretty: true, label: "val is")
+        Cachex.put(:chatter, "messages", [message] ++ val)
+
+      _ ->
+        IO.puts("MISSED")
+    end
+
+    Phoenix.PubSub.broadcast(DailyTwang.PubSub, "messages", {:new_message, message})
+
+    {:noreply,
+     socket
+     |> assign(:has_messages, true)
+     |> put_flash(:info, "Post created successfully")
+     |> push_redirect(to: socket.assigns.return_to)}
+  end
+
   defp save_post(socket, :edit, post_params) do
     case Posts.update_post(socket.assigns.post, post_params) do
       {:ok, _post} ->

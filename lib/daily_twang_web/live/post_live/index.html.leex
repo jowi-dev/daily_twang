@@ -1,7 +1,8 @@
 <h1>Listenin' Post 🧑‍🌾</h1>
 
-<%= if @live_action in [:new, :edit] do %>
+<%= if @live_action in [:new] do %>
   <%= live_modal DailyTwangWeb.PostLive.FormComponent,
+    id: UUID.uuid1(), 
     title: @page_title,
     action: @live_action,
     post: @post,
@@ -10,6 +11,7 @@
 
 
 <div class='flex-1' id='posts'>
+  <span><%= live_patch "New Post", to: Routes.post_index_path(@socket, :new) %></span> 
   <%= for post <- @posts do %>
     <div class='w-full border-t-2' id="post-<%= post.id%>" 
       x-data="{open: false}">
@@ -26,4 +28,3 @@
 <%#<span><%= live_redirect "Show", to: Routes.post_show_path(@socket, :show, post) %></span> 
 <%#<span><%= live_patch "Edit", to: Routes.post_index_path(@socket, :edit, post) %></span> 
 <%# <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: post.id, data: [confirm: "Are you sure?"] %></span> 
-<%# <span><%= live_patch "New Post", to: Routes.post_index_path(@socket, :new) %></span> 

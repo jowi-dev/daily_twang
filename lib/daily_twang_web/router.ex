@@ -27,7 +27,9 @@ defmodule DailyTwangWeb.Router do
   scope "/", DailyTwangWeb do
     pipe_through :browser
 
+    # live "/", PostLive.Index, :index
     live "/", PostLive.Index, :index
+    live "/new", PostLive.Index, :new
 
     live "/posts", PostLive.Index, :index
     # live "/posts/:id", PostLive.Index, :show

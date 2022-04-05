@@ -3,10 +3,20 @@ defmodule DailyTwangWeb.PostLive.Index do
 
   alias DailyTwang.Posts
   alias DailyTwang.Posts.Post
+  alias Phoenix.PubSub
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :posts, list_posts())}
+    posts = list_posts()
+
+    PubSub.subscribe(DailyTwang.PubSub, "messages")
+
+    socket =
+      socket
+      |> assign(:posts, posts)
+      |> assign(:has_messages, false)
+
+    {:ok, socket}
   end
 
   @impl true

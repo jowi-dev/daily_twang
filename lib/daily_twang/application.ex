@@ -14,10 +14,12 @@ defmodule DailyTwang.Application do
       DailyTwangWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: DailyTwang.PubSub},
+      # DailyTwangWeb.Presence
       # Start the Endpoint (http/https)
-      DailyTwangWeb.Endpoint
+      DailyTwangWeb.Endpoint,
       # Start a worker by calling: DailyTwang.Worker.start_link(arg)
       # {DailyTwang.Worker, arg}
+      {Cachex, name: :chatter}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

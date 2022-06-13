@@ -13,9 +13,8 @@ defmodule DailyTwang.Posts do
     "https://hnrss.org/frontpage",
     "https://elixirstatus.com/rss",
     "https://www.aljazeera.com/xml/rss/all.xml"
+    # "https://www.eink.com/rss.php?feed_type=1"
   ]
-
-  # 
 
   @doc """
   Returns the list of posts.
@@ -27,13 +26,14 @@ defmodule DailyTwang.Posts do
 
   """
   def list_posts do
-    case Cachex.get(:chatter, "messages") do
-      {:ok, nil} ->
-        Cachex.put(:chatter, "messages", get_fresh_list(), ttl: :timer.hours(12))
-
-      {:ok, list} ->
-        list
-    end
+    get_fresh_list()
+    #    case Cachex.get(:chatter, "messages") do
+    #      {:ok, nil} ->
+    #        Cachex.put(:chatter, "messages", get_fresh_list(), ttl: :timer.hours(12))
+    #
+    #      {:ok, list} ->
+    #        list
+    #    end
   end
 
   defp get_fresh_list() do
@@ -45,6 +45,14 @@ defmodule DailyTwang.Posts do
   end
 
   defp get_cached_messages do
+  end
+
+  defp fetch_results("https://www.eink.com/rss.php?feed_type=1" = url) do
+    HTTPoison.get!(url)
+    |> Map.get(:body)
+    |> String.replace("<?xml version=\"1.0\" encoding=\"big5\"?>", "")
+    |> FeederEx.parse()
+    |> IO.inspect(pretty: true, limit: :infinity)
   end
 
   defp fetch_results(url) do

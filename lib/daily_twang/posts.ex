@@ -115,6 +115,8 @@ defmodule DailyTwang.Posts do
   defp compare_dates(%{updated: date1}, %{updated: date2}) do
     0 >= Timex.compare(date2, date1)
   end
+  
+  defp compare_dates(_, _), do: false
 
   defp get_source_name(url) do
     cond do

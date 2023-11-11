@@ -36,6 +36,7 @@ defmodule DailyTwang.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:phoenix, github: "phoenixframework/phoenix", override: true},
       {:phoenix_ecto, "~> 4.4"},
+      {:phoenix_view, "~> 2.0"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},

@@ -39,16 +39,11 @@ defmodule DailyTwang.Posts do
 
   defp get_fresh_list() do
     @feeds
-    |> IO.inspect(limit: :infinity, pretty: true, label: "feeds")
     |> Enum.map(&fetch_results/1)
-    |> IO.inspect(limit: :infinity, pretty: true, label: "fetched")
     |> List.flatten()
-    |> IO.inspect(limit: :infinity, pretty: true, label: "flattened")
     |> Enum.map(&parse_feed/1)
-    |> IO.inspect(limit: :infinity, pretty: true, label: "parsed")
     |> Enum.sort(&compare_dates/2)
     |> Enum.filter(&is_struct/1)
-    |> IO.inspect(limit: :infinity, pretty: true, label: "sorted")
   end
 
 #  defp get_cached_messages do

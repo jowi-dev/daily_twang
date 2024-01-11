@@ -26,34 +26,33 @@ defmodule DailyTwang.Posts do
 
   """
   def list_posts do
+    case Cachex.get(:chatter, "messages") do
+      {:ok, nil} ->
+        Cachex.put(:chatter, "messages", get_fresh_list(), ttl: :timer.hours(12))
+
+      {:ok, list} ->
+        list
+    end
+
     get_fresh_list()
-    #    case Cachex.get(:chatter, "messages") do
-    #      {:ok, nil} ->
-    #        Cachex.put(:chatter, "messages", get_fresh_list(), ttl: :timer.hours(12))
-    #
-    #      {:ok, list} ->
-    #        list
-    #    end
   end
 
   defp get_fresh_list() do
     @feeds
+    |> IO.inspect(limit: :infinity, pretty: true, label: "feeds")
     |> Enum.map(&fetch_results/1)
+    |> IO.inspect(limit: :infinity, pretty: true, label: "fetched")
     |> List.flatten()
+    |> IO.inspect(limit: :infinity, pretty: true, label: "flattened")
     |> Enum.map(&parse_feed/1)
+    |> IO.inspect(limit: :infinity, pretty: true, label: "parsed")
     |> Enum.sort(&compare_dates/2)
+    |> Enum.filter(&is_struct/1)
+    |> IO.inspect(limit: :infinity, pretty: true, label: "sorted")
   end
 
-  defp get_cached_messages do
-  end
-
-  defp fetch_results("https://www.eink.com/rss.php?feed_type=1" = url) do
-    HTTPoison.get!(url)
-    |> Map.get(:body)
-    |> String.replace("<?xml version=\"1.0\" encoding=\"big5\"?>", "")
-    |> FeederEx.parse()
-    |> IO.inspect(pretty: true, limit: :infinity)
-  end
+#  defp get_cached_messages do
+#  end
 
   defp fetch_results(url) do
     source_name = get_source_name(url)

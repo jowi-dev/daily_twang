@@ -3,7 +3,9 @@
 
   inputs = { nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; };
   outputs = { self, nixpkgs }:
-    let pkgs = nixpkgs.legacyPackages.x86_64-linux;
+  let 
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    GIGALIXIR_APP_NAME = "daily-twang";
     in {
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = with pkgs; [ 
@@ -14,7 +16,6 @@
           inotify-tools 
           nodejs 
         ];
-        GIGALIXIR_APP_NAME = "daily-twang";
         shellHook = ''
           echo "Welcome to the Daily Twang Development Environment" 
           alias joe-setup='echo "hello world"'
